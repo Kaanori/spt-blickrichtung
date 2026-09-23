@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net471</TargetFramework>
+    <AssemblyName>Blickrichtung</AssemblyName>
+    <RootNamespace>Blickrichtung</RootNamespace>
+    <Version>1.0.0</Version>
+    <LangVersion>latest</LangVersion>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AssemblyTitle>Blickrichtung</AssemblyTitle>
+    <Description>Beim Loslassen der Umsehen-Taste dreht sich der Koerper in die Blickrichtung</Description>
+    <GameDir Condition="'$(GameDir)' == ''">/mnt/nvmegames/Games/SPT-416</GameDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="src/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Alles liegt schon im Spiel - nichts davon mitkopieren (Private=false). -->
+    <Reference Include="Assembly-CSharp" Publicize="true"><HintPath>$(GameDir)/EscapeFromTarkov_Data/Managed/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(GameDir)/EscapeFromTarkov_Data/Managed/UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameDir)/EscapeFromTarkov_Data/Managed/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BepInEx"><HintPath>$(GameDir)/BepInEx/core/BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(GameDir)/BepInEx/core/0Harmony.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <!-- Nach dem Bauen direkt ins Spiel kopieren. -->
+  <Target Name="InsSpiel" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFolder="$(GameDir)/BepInEx/plugins"
+          Condition="Exists('$(GameDir)/BepInEx/plugins')" />
+    <Message Importance="high" Text="-> $(GameDir)/BepInEx/plugins/Blickrichtung.dll (Spiel neu starten)" />
+  </Target>
+
+</Project>
