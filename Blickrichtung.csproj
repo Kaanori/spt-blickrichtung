@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <!-- Nach dem Bauen direkt ins Spiel kopieren. -->
-  <Target Name="InsSpiel" AfterTargets="Build">
+  <Target Name="InsSpiel" AfterTargets="Build" Condition="'$(Installieren)' == 'true'">
     <Copy SourceFiles="$(TargetPath)"
           DestinationFolder="$(GameDir)/BepInEx/plugins"
           Condition="Exists('$(GameDir)/BepInEx/plugins')" />
